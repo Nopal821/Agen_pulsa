@@ -1,17 +1,29 @@
-// resources/js/Pages/Dashboard.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { InertiaLink } from '@inertiajs/inertia-react';
 
 export default function Dashboard({ operators, prabayar }) {
+    // State untuk menentukan tampilan table mana yang aktif
+    const [activeTable, setActiveTable] = useState(null); // 'operators' atau 'prabayar'
+
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <h2 className="text-3xl font-semibold text-gray-900 mb-4">Dashboard</h2>
             <div className="mb-4">
-                <InertiaLink href={route('dashboard.operators')} className="btn btn-primary mr-2">Manage Operators</InertiaLink>
-                <InertiaLink href={route('dashboard.prabayar')} className="btn btn-secondary">Manage Prabayar</InertiaLink>
+                <button
+                    onClick={() => setActiveTable('operators')}
+                    className={`btn mr-2 ${activeTable === 'operators' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                >
+                    Manage Operators
+                </button>
+                <button
+                    onClick={() => setActiveTable('prabayar')}
+                    className={`btn ${activeTable === 'prabayar' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                >
+                    Manage Prabayar
+                </button>
             </div>
 
-            {operators && (
+            {activeTable === 'operators' && (
                 <div>
                     <h3 className="text-2xl font-semibold mb-4">Operator List</h3>
                     <table className="min-w-full bg-white border">
@@ -31,7 +43,7 @@ export default function Dashboard({ operators, prabayar }) {
                 </div>
             )}
 
-            {prabayar && (
+            {activeTable === 'prabayar' && (
                 <div>
                     <h3 className="text-2xl font-semibold mb-4">Prabayar List</h3>
                     <table className="min-w-full bg-white border">
