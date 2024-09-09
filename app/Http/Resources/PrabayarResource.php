@@ -3,23 +3,15 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\Prabayar;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-
 
 class PrabayarResource extends JsonResource
 {
-    public function index()
-    {
-        $prabayar = Prabayar::all();
-        return Inertia::render('Prabayar/Index', [
-            'prabayar' => $prabayar
-        ]);
-    }
-
-    
-
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
     public function toArray($request)
     {
         return [

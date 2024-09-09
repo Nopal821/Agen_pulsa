@@ -14,6 +14,4 @@ class Operator extends Model
     protected $fillable = [
         'operator_name',
     ];
-
-    // Anda bisa menambahkan relasi jika ada hubungan dengan model lain di sini
 }
