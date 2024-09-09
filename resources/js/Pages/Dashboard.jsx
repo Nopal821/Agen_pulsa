@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Inertia } from '@inertiajs/inertia';
 
 export default function Dashboard({ operators, prabayar }) {
     const [activeTable, setActiveTable] = useState('operators');
@@ -18,6 +21,18 @@ export default function Dashboard({ operators, prabayar }) {
                     className={`btn ${activeTable === 'prabayar' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                 >
                     Manage Prabayar
+                </button>
+                <button
+                    onClick={() => Inertia.get('/operator/create')}
+                    className="btn ml-4 bg-green-500 text-white"
+                >
+                    <FontAwesomeIcon icon={faPlus} /> Add New Operator
+                </button>
+                <button
+                    onClick={() => Inertia.get('/prabayar/create')}
+                    className="btn ml-4 bg-green-500 text-white"
+                >
+                    <FontAwesomeIcon icon={faPlus} /> Add New Prabayar
                 </button>
             </div>
 

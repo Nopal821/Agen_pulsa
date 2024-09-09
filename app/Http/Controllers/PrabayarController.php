@@ -16,4 +16,24 @@ class PrabayarController extends Controller
             'prabayar' => PrabayarResource::collection($prabayar)
         ]);
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'operator_name' => 'required|string|max:255',
+            'expired' => 'nullable|date',
+            'price' => 'nullable|numeric',
+            'jenis' => 'nullable|string|max:255',
+        ]);
+
+        Prabayar::create($request->all());
+        return Inertia::render('Prabayar/Create');
+    }
+
+    public function create()
+    {
+       
+        return Inertia::render('Prabayar.Create');
+    }
+
 }

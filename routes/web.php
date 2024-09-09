@@ -39,6 +39,14 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/operator/create', [OperatorController::class,'create'])->name('operator.create');
+   
+Route::get('/prabayar/create', [PrabayarController::class, 'create'])->name('prabayar.create');
+Route::post('/prabayar', [PrabayarController::class, 'store'])->name('prabayar.store');
+
+    Route::post('/operator', [OperatorController::class, 'store'])->name('operator.store');
+
 });
 
 // Rute untuk otentikasi

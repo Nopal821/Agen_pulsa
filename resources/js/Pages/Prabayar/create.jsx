@@ -1,9 +1,7 @@
-// resources/js/Pages/Prabayar/Create.jsx
-
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 
-export default function CreatePrabayar() {
+export default function CreatePrabayar({ operators }) {
     const [operatorName, setOperatorName] = useState('');
     const [expired, setExpired] = useState('');
     const [price, setPrice] = useState('');
@@ -25,14 +23,20 @@ export default function CreatePrabayar() {
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
                 <div className="mb-4">
                     <label htmlFor="operator_name" className="block text-sm font-medium text-gray-700">Operator Name</label>
-                    <input 
-                        type="text" 
+                    <select 
                         id="operator_name" 
                         value={operatorName} 
                         onChange={e => setOperatorName(e.target.value)} 
                         className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                        required 
-                    />
+                        required
+                    >
+                        <option value="">Select Operator</option>
+                        {operators && operators.map(operator => (
+                            <option key={operator.id} value={operator.operator_name}>
+                                {operator.operator_name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div className="mb-4">
