@@ -1,4 +1,3 @@
-// resources/js/Pages/Operator/Edit.jsx
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 

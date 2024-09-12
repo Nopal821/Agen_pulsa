@@ -7,11 +7,21 @@ export default function CreatePrabayar({ operators }) {
     const [price, setPrice] = useState('');
     const [jenis, setJenis] = useState('');
 
+    // Fungsi untuk memformat tanggal menjadi dd-mm-yyyy
+    const formatDateToIndonesia = (date) => {
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return new Date(date).toLocaleDateString('id-ID', options);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // Format tanggal sebelum dikirim ke server
+        const formattedExpired = formatDateToIndonesia(expired);
+
         Inertia.post('/prabayar', {
             operator_name: operatorName,
-            expired,
+            expired: formattedExpired, // Kirim tanggal yang sudah diformat
             price,
             jenis,
         });
@@ -31,7 +41,7 @@ export default function CreatePrabayar({ operators }) {
                         required
                     >
                         <option value="">Select Operator</option>
-                        {operators && operators.map(operator => (
+                        {operators.map(operator => (
                             <option key={operator.id} value={operator.operator_name}>
                                 {operator.operator_name}
                             </option>
@@ -49,6 +59,10 @@ export default function CreatePrabayar({ operators }) {
                         className="mt-1 block w-full p-2 border border-gray-300 rounded"
                         required 
                     />
+                    {/* Tampilkan tanggal yang sudah diformat */}
+                    {expired && (
+                        <p className="mt-2 text-sm text-gray-600">Tanggal dalam format Indonesia: {formatDateToIndonesia(expired)}</p>
+                    )}
                 </div>
 
                 <div className="mb-4">

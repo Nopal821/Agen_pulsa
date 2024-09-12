@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Prabayar;
+use App\Models\Operator; // Import model Operator
 use App\Http\Resources\PrabayarResource;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,8 +33,9 @@ class PrabayarController extends Controller
 
     public function create()
     {
-       
-        return Inertia::render('Prabayar.Create');
+        $operators = Operator::all(); // Ambil data operator
+        return Inertia::render('Prabayar/Create', [
+            'operators' => $operators // Kirim data operators ke komponen CreatePrabayar
+        ]);
     }
-
 }
