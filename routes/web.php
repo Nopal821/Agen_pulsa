@@ -53,14 +53,20 @@ Route::middleware('auth')->group(function () {
 Route::get('/operator', [OperatorController::class, 'index'])->name('operator.index');
 Route::get('/operator/create', [OperatorController::class, 'create'])->name('operator.create');
 Route::post('/operator', [OperatorController::class, 'store'])->name('operator.store');
+
 Route::get('/operator/{id}/edit', [OperatorController::class, 'edit'])->name('operator.edit');
-Route::put('/operator/{id}', [OperatorController::class, 'update'])->name('operator.update');
-Route::delete('/operator/{id}', [OperatorController::class, 'destroy'])->name('operator.destroy');
+Route::put('/operator/{id}', [OperatorController::class, 'update']);
+Route::get('/operator/delete/{id}', [OperatorController::class, 'delete']);
+Route::delete('/operator/{id}', [OperatorController::class, 'destroy']);
     // Rute untuk membuat Prabayar dan menyimpannya
    
 Route::get('/prabayar', [PrabayarController::class, 'index'])->name('prabayar.index');
 Route::get('/prabayar/create', [PrabayarController::class, 'create'])->name('prabayar.create');
 Route::post('/prabayar', [PrabayarController::class, 'store'])->name('prabayar.store');
+Route::get('/prabayar/{id}/edit', [PrabayarController::class, 'edit'])->name('prabayar.edit');
+Route::put('/prabayar/{id}', [PrabayarController::class, 'update']);
+Route::get('/prabayar/delete/{id}', [PrabayarController::class, 'delete']);
+Route::delete('/prabayar/{id}', [PrabayarController::class, 'destroy']);
 });
 
 // Rute untuk otentikasi

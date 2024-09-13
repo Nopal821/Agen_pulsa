@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Inertia } from '@inertiajs/inertia';
 
 export default function Dashboard({ operators, prabayar }) {
@@ -8,6 +8,7 @@ export default function Dashboard({ operators, prabayar }) {
 
     // Format tanggal ke format Indonesia
     const formatDate = (date) => {
+        if (!date) return '-'; // Jika tidak ada tanggal
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
         return new Date(date).toLocaleDateString('id-ID', options);
     };
@@ -18,6 +19,13 @@ export default function Dashboard({ operators, prabayar }) {
             style: 'currency',
             currency: 'IDR',
         }).format(amount);
+    };
+
+    // Hapus data
+    const handleDelete = (url) => {
+        if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
+            Inertia.delete(url);
+        }
     };
 
     return (
@@ -68,13 +76,28 @@ export default function Dashboard({ operators, prabayar }) {
                         <table className="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
                             <thead className="bg-gray-200 text-gray-700">
                                 <tr>
-                                    <th className="px-4 py-2 text-left">Operator Name</th>
+                                    <th className="px-4 py-2 text-left">Operator</th>
+                                    <th className="px-4 py-2 text-left">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {operators.map((operator) => (
                                     <tr key={operator.id} className="hover:bg-gray-100 transition-colors duration-300">
                                         <td className="border px-4 py-2">{operator.operator_name}</td>
+                                        <td className="border px-4 py-2">
+                                            <button
+                                                onClick={() => Inertia.get(`/operator/${operator.id}/edit`)}
+                                                className="text-blue-600 mr-4"
+                                            >
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(`/operator/${operator.id}`)}
+                                                className="text-red-600"
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -93,10 +116,11 @@ export default function Dashboard({ operators, prabayar }) {
                         <table className="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
                             <thead className="bg-gray-200 text-gray-700">
                                 <tr>
-                                    <th className="px-4 py-2 text-left">Operator Name</th>
+                                    <th className="px-4 py-2 text-left">Operator</th>
                                     <th className="px-4 py-2 text-left">Expired</th>
-                                    <th className="px-4 py-2 text-left">Price</th>
+                                    <th className="px-4 py-2 text-left">Harga</th>
                                     <th className="px-4 py-2 text-left">Jenis</th>
+                                    <th className="px-4 py-2 text-left">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -106,6 +130,20 @@ export default function Dashboard({ operators, prabayar }) {
                                         <td className="border px-4 py-2">{formatDate(item.expired)}</td>
                                         <td className="border px-4 py-2">{formatCurrency(item.price)}</td>
                                         <td className="border px-4 py-2">{item.jenis}</td>
+                                        <td className="border px-4 py-2">
+                                            <button
+                                                onClick={() => Inertia.get(`/prabayar/${item.id}/edit`)}
+                                                className="text-blue-600 mr-4"
+                                            >
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(`/prabayar/${item.id}`)}
+                                                className="text-red-600"
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
