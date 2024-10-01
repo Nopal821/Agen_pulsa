@@ -13,7 +13,7 @@ class PrabayarController extends Controller
     // Menampilkan semua prabayar di halaman index
     public function index()
     {
-        $prabayar = Prabayar::with('operator')->get(); // Memuat relasi operator
+        $prabayar = Prabayar::all(); // Memuat relasi operator
         return Inertia::render('Dashboard', [
             'prabayar' => PrabayarResource::collection($prabayar),
         ]);
@@ -29,27 +29,29 @@ class PrabayarController extends Controller
     }
 
     // Menyimpan prabayar baru
-    public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'operator_id' => 'required|exists:operators,id', // Menggunakan id operator, bukan nama
-            'expired' => 'nullable|date',
-            'price' => 'required|numeric',
-            'jenis' => 'required|string|max:255',
-        ]);
+    // Menyimpan prabayar baru
+public function store(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'operator_name' => 'required|string|max:255', // Menggunakan operator_name
+        'expired' => 'nullable|date',
+        'price' => 'required|numeric',
+        'jenis' => 'required|string|max:255',
+    ]);
 
-        // Simpan data ke database
-        Prabayar::create([
-            'operator_id' => $request->operator_id,
-            'expired' => $request->expired,
-            'price' => $request->price,
-            'jenis' => $request->jenis,
-        ]);
+    // Simpan data ke database
+    Prabayar::create([
+        'operator_name' => $request->operator_name, // Simpan operator_name
+        'expired' => $request->expired,
+        'price' => $request->price,
+        'jenis' => $request->jenis,
+    ]);
 
-        // Redirect ke dashboard dengan pesan sukses
-        return redirect()->route('dashboard')->with('success', 'Prabayar created successfully.');
-    }
+    // Redirect ke dashboard dengan pesan sukses
+    return redirect()->route('dashboard')->with('success', 'Prabayar created successfully.');
+}
+
 
     // Menampilkan form edit untuk prabayar
     public function edit($id)
