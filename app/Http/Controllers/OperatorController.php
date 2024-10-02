@@ -13,7 +13,7 @@ class OperatorController extends Controller
     {
         $operators = Operator::all();
         return Inertia::render('Operator/Index', [
-            'operators' => $operators
+            'operators' => $operators,
         ]);
     }
 

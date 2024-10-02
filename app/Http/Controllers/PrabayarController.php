@@ -7,16 +7,16 @@ use App\Models\Operator;
 use App\Http\Resources\PrabayarResource;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use log;
 
 class PrabayarController extends Controller
 {
     // Menampilkan semua prabayar di halaman index
     public function index()
     {
-        $prabayar = Prabayar::all(); // Memuat relasi operator
-        return Inertia::render('Dashboard', [
-            'prabayar' => PrabayarResource::collection($prabayar),
-        ]);
+        $prabayarData = Prabayar::all(); // Mengambil semua data Prabayar dari database
+        return Inertia::render('Prabayar/Index', ['prabayar' => $prabayarData]);
+
     }
 
     // Menampilkan form create untuk membuat prabayar baru
@@ -68,7 +68,7 @@ public function store(Request $request)
     {
         // Validasi input
         $request->validate([
-            'operator_id' => 'required|exists:operators,id', // Menggunakan id operator, bukan nama
+           'operator_name' => 'required|string|max:255', // Menggunakan id operator, bukan nama
             'expired' => 'nullable|date',
             'price' => 'required|numeric',
             'jenis' => 'required|string|max:255',
@@ -79,7 +79,7 @@ public function store(Request $request)
 
         // Update data prabayar
         $prabayar->update([
-            'operator_id' => $request->operator_id,
+            'operator_name' => $request->operator_name,
             'expired' => $request->expired,
             'price' => $request->price,
             'jenis' => $request->jenis,
@@ -98,4 +98,10 @@ public function store(Request $request)
         // Redirect ke dashboard dengan pesan sukses
         return redirect()->route('dashboard')->with('success', 'Prabayar deleted successfully.');
     }
+    public function apiIndex()
+{
+    $prabayarData = Prabayar::all(); // Mengambil semua data Prabayar dari database
+    return response()->json($prabayarData);
+}
+
 }
