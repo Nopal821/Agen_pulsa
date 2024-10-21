@@ -1,9 +1,10 @@
+// In Pages/Dashboard.jsx
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Inertia } from '@inertiajs/inertia';
 
-export default function Dashboard({ operators, prabayar }) {
+const Dashboard = ({ operators, prabayar, flash }) => {
     const [activeTable, setActiveTable] = useState('operators');
 
     // Format tanggal ke format Indonesia
@@ -31,6 +32,14 @@ export default function Dashboard({ operators, prabayar }) {
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <h2 className="text-3xl font-semibold text-gray-900 mb-6">Dashboard</h2>
+            
+            {/* Pesan sukses jika ada */}
+            {flash.success && (
+                <div className="bg-green-500 text-white p-4 rounded-md mb-4">
+                    {flash.success}
+                </div>
+            )}
+
             <div className="mb-6 flex gap-4">
                 <button
                     onClick={() => setActiveTable('operators')}
@@ -50,7 +59,7 @@ export default function Dashboard({ operators, prabayar }) {
             {activeTable === 'operators' && (
                 <div className="mb-6">
                     <button
-                        onClick={() => Inertia.get('/operator/create')}
+                        onClick={() => Inertia.get(route('operator.create'))} // Using route helper
                         className="btn px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition-colors duration-300"
                     >
                         <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add New Operator
@@ -155,4 +164,6 @@ export default function Dashboard({ operators, prabayar }) {
             )}
         </div>
     );
-}
+};
+
+export default Dashboard; // Ensure this line is present

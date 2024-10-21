@@ -1,107 +1,77 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Prabayar;
 use App\Models\Operator;
-use App\Http\Resources\PrabayarResource;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use log;
 
 class PrabayarController extends Controller
 {
-    // Menampilkan semua prabayar di halaman index
     public function index()
     {
-        $prabayarData = Prabayar::all(); // Mengambil semua data Prabayar dari database
+        $prabayarData = Prabayar::all();
         return Inertia::render('Prabayar/Index', ['prabayar' => $prabayarData]);
-
     }
 
-    // Menampilkan form create untuk membuat prabayar baru
     public function create()
     {
-        $operators = Operator::all(); // Mendapatkan semua operator untuk dropdown
-        return Inertia::render('Prabayar/Create', [
-            'operators' => $operators,
-        ]);
+        $operators = Operator::all(); // Fetch all operators
+        return Inertia::render('Prabayar/Create', ['operators' => $operators]); // Pass operators to the view
     }
 
-    // Menyimpan prabayar baru
-    // Menyimpan prabayar baru
-public function store(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'operator_name' => 'required|string|max:255', // Menggunakan operator_name
-        'expired' => 'nullable|date',
-        'price' => 'required|numeric',
-        'jenis' => 'required|string|max:255',
-    ]);
-
-    // Simpan data ke database
-    Prabayar::create([
-        'operator_name' => $request->operator_name, // Simpan operator_name
-        'expired' => $request->expired,
-        'price' => $request->price,
-        'jenis' => $request->jenis,
-    ]);
-
-    // Redirect ke dashboard dengan pesan sukses
-    return redirect()->route('dashboard')->with('success', 'Prabayar created successfully.');
-}
-
-
-    // Menampilkan form edit untuk prabayar
-    public function edit($id)
+    public function store(Request $request)
     {
-        $prabayar = Prabayar::findOrFail($id);
-        return Inertia::render('Prabayar/Edit', [
-            'prabayar' => $prabayar,
-        ]);
+        try {
+            // Validasi input
+            $request->validate([
+                'operator_name' => 'required|string|max:255',
+                'expired' => 'nullable|date',
+                'price' => 'required|numeric',
+                'jenis' => 'required|string|max:255',
+            ]);
+    
+            // Buat data baru di tabel prabayar
+            Prabayar::create($request->only('operator_name', 'expired', 'price', 'jenis'));
+    
+            // Redirect ke dashboard dengan pesan sukses
+            return redirect()->route('dashboard')->with('success', 'Prabayar created successfully.');
+        } catch (\Exception $e) {
+            // Log error
+            \Log::error('Failed to create Prabayar: ' . $e->getMessage());
+    
+            // Redirect kembali dengan pesan error
+            return redirect()->back()->withErrors(['error' => 'Failed to create Prabayar.'])->withInput();
+        }
     }
     
 
-    // Memperbarui data prabayar
+    public function edit($id)
+    {
+        $prabayar = Prabayar::findOrFail($id);
+        return Inertia::render('Prabayar/Edit', ['prabayar' => $prabayar]);
+    }
+
     public function update(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
-           'operator_name' => 'required|string|max:255', // Menggunakan id operator, bukan nama
+            'operator_name' => 'required|string|max:255',
             'expired' => 'nullable|date',
             'price' => 'required|numeric',
             'jenis' => 'required|string|max:255',
         ]);
 
-        // Mendapatkan prabayar berdasarkan id
         $prabayar = Prabayar::findOrFail($id);
+        $prabayar->update($request->only('operator_name', 'expired', 'price', 'jenis'));
 
-        // Update data prabayar
-        $prabayar->update([
-            'operator_name' => $request->operator_name,
-            'expired' => $request->expired,
-            'price' => $request->price,
-            'jenis' => $request->jenis,
-        ]);
-
-        // Redirect ke dashboard dengan pesan sukses
-        return redirect()->route('dashboard')->with('success', 'Prabayar updated successfully.');
+        return redirect()->route('prabayar.index')->with('success', 'Prabayar updated successfully.');
     }
 
-    // Menghapus prabayar berdasarkan id
     public function destroy($id)
     {
         $prabayar = Prabayar::findOrFail($id);
         $prabayar->delete();
 
-        // Redirect ke dashboard dengan pesan sukses
-        return redirect()->route('dashboard')->with('success', 'Prabayar deleted successfully.');
+        return redirect()->route('prabayar.index')->with('success', 'Prabayar deleted successfully.');
     }
-    public function apiIndex()
-{
-    $prabayarData = Prabayar::all(); // Mengambil semua data Prabayar dari database
-    return response()->json($prabayarData);
-}
-
 }

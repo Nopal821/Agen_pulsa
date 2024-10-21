@@ -1,14 +1,14 @@
 <?php
-
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OperatorController;
+use App\Http\Controllers\PrabayarController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Api\DataController;
+use Inertia\Inertia;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OperatorController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PrabayarController;
-use Inertia\Inertia;
 
-// Halaman depan dan informasi dasar
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -18,56 +18,31 @@ Route::get('/', function () {
     ]);
 });
 
-// Rute yang memerlukan autentikasi
+Route::get('/operators', [DataController::class, 'getOperators']);
+Route::get('/prabayars', [DataController::class, 'getPrabayar']);
+
+
+// Routes that require authentication
 Route::middleware('auth')->group(function () {
 
-    Route::get('/operator/create', function () {
-        return Inertia::render('Operator/Create');
-    });
-    // Profil pengguna
+    // Dashboard route
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Operator routes
+    Route::resource('operator', OperatorController::class);
+
+    // Prabayar routes
+    Route::resource('prabayar', PrabayarController::class);
+
+    Route::get('/Operator/Create', [OperatorController::class, 'create'])->name('operator.create');
+    // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // Rute untuk Operator
-    Route::prefix('dashboard')->group(function () {
-        // Dashboard Operator
-        Route::get('/operators', [OperatorController::class, 'index'])->name('dashboard.operators');
-        // Resource route untuk Operator (termasuk rute create)
-        Route::resource('operators', OperatorController::class)->except(['create', 'store']);
-    });
-
-    // Rute untuk Prabayar
-    Route::prefix('dashboard')->group(function () {
-        // Dashboard Prabayar
-        Route::get('/prabayar', [PrabayarController::class, 'index'])->name('dashboard.prabayar');
-        // Resource route untuk Prabayar (termasuk rute create)
-        Route::resource('prabayar', PrabayarController::class)->except(['create', 'store']);
-    });
-
-    // Dashboard utama
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Rute untuk membuat Operator dan menyimpannya
-   
-Route::get('/operator', [OperatorController::class, 'index'])->name('operator.index');
-Route::get('/operator/create', [OperatorController::class, 'create'])->name('operator.create');
-Route::post('/operator', [OperatorController::class, 'store'])->name('operator.store');
-
-Route::get('/operator/{id}/edit', [OperatorController::class, 'edit'])->name('operator.edit');
-Route::put('/operator/{id}', [OperatorController::class, 'update']);
-Route::get('/operator/delete/{id}', [OperatorController::class, 'delete']);
-Route::delete('/operator/{id}', [OperatorController::class, 'destroy']);
-    // Rute untuk membuat Prabayar dan menyimpannya
-   
-Route::get('/prabayar', [PrabayarController::class, 'index'])->name('prabayar.index');
-Route::get('/prabayar/create', [PrabayarController::class, 'create'])->name('prabayar.create');
-Route::post('/prabayar', [PrabayarController::class, 'store'])->name('prabayar.store');
-Route::get('/prabayar/{id}/edit', [PrabayarController::class, 'edit'])->name('prabayar.edit');
-Route::put('/prabayar/{id}', [PrabayarController::class, 'update']);
-Route::get('/prabayar/delete/{id}', [PrabayarController::class, 'delete']);
-Route::delete('/prabayar/{id}', [PrabayarController::class, 'destroy']);
 });
 
-// Rute untuk otentikasi
+
+
+
+// Include authentication routes
 require __DIR__.'/auth.php';

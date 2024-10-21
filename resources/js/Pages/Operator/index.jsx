@@ -1,5 +1,8 @@
 // Pages/Operator/Index.jsx
-import { Head, Link } from '@inertiajs/inertia-react';
+import { createRoot } from 'react-dom/client';
+import { createInertiaApp } from '@inertiajs/react';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+
 
 function OperatorIndex({ operators }) {
   return (

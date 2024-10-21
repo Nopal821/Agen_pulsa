@@ -14,8 +14,12 @@ class DashboardController extends Controller
         $prabayar = Prabayar::all();
 
         return Inertia::render('Dashboard', [
-            'operators' => $operators,
-            'prabayar' => $prabayar,
+            'operators' => Operator::all(),
+            'prabayar' => Prabayar::all(),
+            'flash' => [
+                'success' => session('success'),
+            ],
         ]);
-    }
+        
+}
 }
