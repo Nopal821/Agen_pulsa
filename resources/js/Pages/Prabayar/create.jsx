@@ -7,18 +7,12 @@ export default function CreatePrabayar({ operators = [] }) {
     const [price, setPrice] = useState('');
     const [jenis, setJenis] = useState('');
 
-    const formatDateToIndonesia = (date) => {
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        return new Date(date).toLocaleDateString('id-ID', options);
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formattedExpired = formatDateToIndonesia(expired);
 
         Inertia.post('/prabayar', {
             operator_name: operatorName,
-            expired: formattedExpired,
+            expired: parseInt(expired), // Ubah expired menjadi integer
             price,
             jenis,
         });
@@ -49,9 +43,9 @@ export default function CreatePrabayar({ operators = [] }) {
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="expired" className="block text-sm font-medium text-gray-700">Expired Date</label>
+                    <label htmlFor="expired" className="block text-sm font-medium text-gray-700">Expired (in days)</label>
                     <input 
-                        type="date" 
+                        type="number" 
                         id="expired" 
                         value={expired} 
                         onChange={e => setExpired(e.target.value)} 
@@ -59,7 +53,7 @@ export default function CreatePrabayar({ operators = [] }) {
                         required 
                     />
                     {expired && (
-                        <p className="mt-2 text-sm text-gray-600">Tanggal dalam format Indonesia: {formatDateToIndonesia(expired)}</p>
+                        <p className="mt-2 text-sm text-gray-600">{expired} days before expiration</p>
                     )}
                 </div>
 

@@ -26,15 +26,20 @@ class PrabayarController extends Controller
             // Validasi input
             $request->validate([
                 'operator_name' => 'required|string|max:255',
-                'expired' => 'nullable|date',
-                'price' => 'required|numeric',
+                'expired' => 'required|integer|min:1', // Ubah validasi expired menjadi integer
+                'price' => 'required|numeric|min:0',
                 'jenis' => 'required|string|max:255',
             ]);
     
             // Buat data baru di tabel prabayar
-            Prabayar::create($request->only('operator_name', 'expired', 'price', 'jenis'));
+            Prabayar::create([
+                'operator_name' => $request->input('operator_name'),
+                'expired' => $request->input('expired'), // expired berupa integer (jumlah hari)
+                'price' => $request->input('price'),
+                'jenis' => $request->input('jenis'),
+            ]);
     
-            // Redirect ke dashboard dengan pesan sukses
+            // Redirect ke halaman dashboard dengan pesan sukses
             return redirect()->route('dashboard')->with('success', 'Prabayar created successfully.');
         } catch (\Exception $e) {
             // Log error

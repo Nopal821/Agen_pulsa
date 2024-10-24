@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('prabayar', function (Blueprint $table) {
             $table->id();
             $table->string('operator_name');
-            $table->date('expired');
+            $table->integer('expired'); // Mengubah dari date menjadi integer
             $table->decimal('price', 8, 2);
             $table->enum('jenis', ['pulsa', 'data']);
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.
